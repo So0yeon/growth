@@ -1,0 +1,1676 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>THE BALANCE : 나의 발달 로그</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0c14;
+  --bg2: #10131f;
+  --bg3: #161924;
+  --panel: #1a1e2e;
+  --panel2: #1f2438;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.14);
+  --text: #e8eaf0;
+  --text2: #8b90a8;
+  --text3: #5a6080;
+  --accent: #7c6fff;
+  --accent2: #9d8fff;
+  --teal: #3dd9c0;
+  --pink: #ff6b9d;
+  --gold: #ffc95e;
+  --green: #4de89a;
+  --red: #ff5e6e;
+  --orange: #ff8c5a;
+  --blue: #5ea8ff;
+  --stat1: #4de89a;
+  --stat2: #ff6b9d;
+  --stat3: #5ea8ff;
+  --stat4: #ffc95e;
+  --glow: rgba(124,111,255,0.25);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+html, body {
+  width:100%; min-height:100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans KR', sans-serif;
+  overflow-x: hidden;
+}
+
+/* SCREENS */
+.screen {
+  display: none;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 0 40px;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.screen.active { display: flex; }
+
+/* NOISE OVERLAY */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9999; opacity: 0.4;
+}
+
+/* GRID BG */
+.grid-bg {
+  position: fixed; inset: 0;
+  background-image: 
+    linear-gradient(rgba(124,111,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124,111,255,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+/* ─── TITLE SCREEN ─── */
+#screen-title {
+  justify-content: center;
+  text-align: center;
+  gap: 0;
+  padding: 60px 24px 40px;
+}
+
+.title-badge {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: var(--accent);
+  background: rgba(124,111,255,0.12);
+  border: 1px solid rgba(124,111,255,0.3);
+  padding: 6px 16px;
+  border-radius: 20px;
+  margin-bottom: 28px;
+  display: inline-block;
+  animation: pulse-border 2s ease-in-out infinite;
+}
+@keyframes pulse-border {
+  0%,100% { box-shadow: 0 0 0 rgba(124,111,255,0); }
+  50% { box-shadow: 0 0 20px rgba(124,111,255,0.3); }
+}
+
+.title-main {
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(32px, 8vw, 46px);
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -1px;
+  line-height: 1;
+  margin-bottom: 6px;
+  text-shadow: 0 0 40px var(--glow);
+}
+.title-main span { color: var(--accent); }
+
+.title-divider {
+  width: 60px; height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--teal));
+  margin: 16px auto;
+  border-radius: 2px;
+}
+
+.title-sub {
+  font-size: 13px;
+  color: var(--text2);
+  letter-spacing: 2px;
+  margin-bottom: 40px;
+}
+
+.title-visual {
+  width: 180px; height: 180px;
+  position: relative;
+  margin: 0 auto 44px;
+}
+.title-ring {
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  border: 2px solid transparent;
+}
+.title-ring:nth-child(1) {
+  border-color: rgba(124,111,255,0.5);
+  animation: spin 8s linear infinite;
+}
+.title-ring:nth-child(2) {
+  inset: 16px;
+  border-color: rgba(61,217,192,0.4);
+  animation: spin 5s linear infinite reverse;
+}
+.title-ring:nth-child(3) {
+  inset: 32px;
+  border-color: rgba(255,107,157,0.3);
+  animation: spin 12s linear infinite;
+}
+.title-center {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 52px;
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.stat-preview {
+  display: flex; gap: 8px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.stat-chip {
+  font-size: 11px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid;
+  font-weight: 500;
+}
+.stat-chip.s1 { color: var(--stat1); border-color: rgba(77,232,154,0.3); background: rgba(77,232,154,0.06); }
+.stat-chip.s2 { color: var(--stat2); border-color: rgba(255,107,157,0.3); background: rgba(255,107,157,0.06); }
+.stat-chip.s3 { color: var(--stat3); border-color: rgba(94,168,255,0.3); background: rgba(94,168,255,0.06); }
+.stat-chip.s4 { color: var(--stat4); border-color: rgba(255,201,94,0.3); background: rgba(255,201,94,0.06); }
+
+/* BUTTONS */
+.btn-primary {
+  width: 100%; max-width: 320px;
+  padding: 16px 32px;
+  background: linear-gradient(135deg, var(--accent), #5c4ee8);
+  border: none; border-radius: 14px;
+  color: #fff;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 1px;
+  box-shadow: 0 8px 32px rgba(124,111,255,0.35);
+  transition: all 0.2s;
+  position: relative; overflow: hidden;
+}
+.btn-primary::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+  opacity: 0; transition: 0.2s;
+}
+.btn-primary:hover::after, .btn-primary:active::after { opacity: 1; }
+.btn-primary:active { transform: scale(0.97); }
+
+.btn-secondary {
+  padding: 12px 28px;
+  background: transparent;
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  color: var(--text2);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ─── NICKNAME SCREEN ─── */
+#screen-nickname {
+  padding: 60px 24px 40px;
+  gap: 0;
+}
+.screen-header {
+  width: 100%;
+  margin-bottom: 36px;
+}
+.step-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.screen-title-text {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.4;
+}
+.screen-desc {
+  font-size: 13px;
+  color: var(--text2);
+  margin-top: 6px;
+  line-height: 1.6;
+}
+
+.input-wrap {
+  width: 100%; position: relative; margin-bottom: 28px;
+}
+.input-label {
+  font-size: 12px;
+  color: var(--text2);
+  margin-bottom: 8px;
+  display: block;
+}
+.text-input {
+  width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  color: var(--text);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.text-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(124,111,255,0.15);
+}
+.text-input::placeholder { color: var(--text3); font-size: 15px; }
+
+.nickname-preview {
+  width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  text-align: center;
+  margin-bottom: 36px;
+}
+.nickname-preview .preview-label {
+  font-size: 11px; color: var(--text3); margin-bottom: 8px; letter-spacing: 2px;
+}
+.nickname-preview .preview-name {
+  font-size: 24px; font-weight: 900; color: var(--text);
+}
+.nickname-preview .preview-name span { color: var(--accent); }
+
+/* ─── CHARACTER SCREEN ─── */
+#screen-character {
+  padding: 40px 20px 40px;
+  gap: 0;
+}
+
+.char-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+  margin: 20px 0 28px;
+}
+.char-card {
+  background: var(--panel);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  padding: 16px 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+.char-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  opacity: 0; transition: 0.2s;
+}
+.char-card.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(124,111,255,0.2);
+}
+.char-card.selected::before { opacity: 1; background: rgba(124,111,255,0.07); }
+.char-card:active { transform: scale(0.97); }
+.char-emoji { font-size: 32px; margin-bottom: 8px; }
+.char-tag {
+  font-size: 10px;
+  line-height: 1.4;
+  color: var(--text2);
+  font-weight: 500;
+}
+.char-gender { font-size: 9px; color: var(--text3); margin-top: 4px; letter-spacing: 1px; }
+.char-card.selected .char-tag { color: var(--accent2); }
+
+.char-selected-display {
+  width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 70px;
+}
+.char-sel-emoji { font-size: 36px; }
+.char-sel-info {}
+.char-sel-label { font-size: 10px; color: var(--text3); letter-spacing: 2px; }
+.char-sel-name { font-size: 18px; font-weight: 700; }
+.char-sel-name span { color: var(--accent); }
+.char-sel-desc { font-size: 11px; color: var(--text2); margin-top: 3px; }
+
+/* ─── WAKEUP SCREEN ─── */
+#screen-wakeup {
+  padding: 40px 20px 40px;
+  gap: 0;
+}
+.time-cards {
+  display: flex; flex-direction: column; gap: 10px;
+  width: 100%; margin: 20px 0 28px;
+}
+.time-card {
+  background: var(--panel);
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 16px;
+}
+.time-card.selected {
+  border-color: var(--teal);
+  box-shadow: 0 0 20px rgba(61,217,192,0.15);
+}
+.time-card:active { transform: scale(0.98); }
+.time-big { font-family: 'Space Mono', monospace; font-size: 28px; font-weight: 700; color: var(--text); min-width: 80px; }
+.time-card.selected .time-big { color: var(--teal); }
+.time-info {}
+.time-name { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+.time-desc { font-size: 11px; color: var(--text2); line-height: 1.4; }
+.time-effect { margin-top: 6px; display: flex; gap: 6px; flex-wrap: wrap; }
+.effect-tag {
+  font-size: 10px; padding: 2px 8px; border-radius: 10px;
+  background: rgba(255,255,255,0.05); color: var(--text3); border: 1px solid var(--border);
+}
+.effect-tag.up { background: rgba(77,232,154,0.08); color: var(--green); border-color: rgba(77,232,154,0.2); }
+.effect-tag.down { background: rgba(255,94,110,0.08); color: var(--red); border-color: rgba(255,94,110,0.2); }
+
+/* ─── GAME SCREEN ─── */
+#screen-game {
+  padding: 0 0 40px;
+  gap: 0;
+}
+
+.game-header {
+  width: 100%;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 20px 12px;
+  position: sticky; top: 0; z-index: 100;
+}
+.game-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.game-scene-info {}
+.game-scene-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; color: var(--accent); letter-spacing: 2px;
+}
+.game-scene-name {
+  font-size: 16px; font-weight: 700; color: var(--text);
+}
+.game-progress-wrap {
+  display: flex; align-items: center; gap: 8px;
+}
+.game-progress-dots {
+  display: flex; gap: 4px;
+}
+.dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--bg3); border: 1px solid var(--border2);
+  transition: all 0.3s;
+}
+.dot.done { background: var(--accent); border-color: var(--accent); }
+.dot.current { background: var(--teal); border-color: var(--teal); box-shadow: 0 0 6px var(--teal); }
+
+.stat-bars {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px;
+}
+.stat-row {
+  display: flex; align-items: center; gap: 6px;
+}
+.stat-icon { font-size: 12px; width: 16px; text-align: center; }
+.stat-name { font-size: 9px; color: var(--text2); min-width: 32px; letter-spacing: 0.5px; }
+.stat-bar-bg {
+  flex: 1; height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden;
+}
+.stat-bar-fill {
+  height: 100%; border-radius: 2px; transition: width 0.5s ease;
+}
+.stat-bar-fill.s1 { background: linear-gradient(90deg, var(--stat1), #2dca80); }
+.stat-bar-fill.s2 { background: linear-gradient(90deg, var(--stat2), #e0447a); }
+.stat-bar-fill.s3 { background: linear-gradient(90deg, var(--stat3), #3d7de0); }
+.stat-bar-fill.s4 { background: linear-gradient(90deg, var(--stat4), #e0a030); }
+.stat-val { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--text2); min-width: 22px; text-align: right; }
+
+.game-body {
+  width: 100%; padding: 20px;
+  flex: 1;
+}
+
+.scene-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 16px;
+  position: relative; overflow: hidden;
+  animation: fadeSlide 0.35s ease;
+}
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.scene-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--teal));
+}
+
+.scene-time {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px; color: var(--text3); margin-bottom: 12px;
+}
+.scene-emoji { font-size: 40px; margin-bottom: 12px; display: block; }
+.scene-situation {
+  font-size: 15px; font-weight: 500; line-height: 1.7;
+  color: var(--text); margin-bottom: 10px;
+}
+.scene-situation .name-highlight { color: var(--teal); font-weight: 700; }
+.scene-dialogue {
+  font-size: 13px; color: var(--text2); line-height: 1.6;
+  background: rgba(255,255,255,0.03);
+  border-left: 2px solid var(--accent);
+  padding: 10px 14px; border-radius: 0 8px 8px 0;
+  font-style: italic;
+}
+
+.choices-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; color: var(--text3); letter-spacing: 3px; margin-bottom: 12px;
+}
+.choices-wrap {
+  display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;
+}
+.choice-btn {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+  position: relative; overflow: hidden;
+  animation: fadeSlide 0.35s ease both;
+}
+.choice-btn:nth-child(1) { animation-delay: 0.05s; }
+.choice-btn:nth-child(2) { animation-delay: 0.1s; }
+.choice-btn:nth-child(3) { animation-delay: 0.15s; }
+.choice-btn:hover {
+  border-color: var(--accent);
+  background: rgba(124,111,255,0.06);
+  transform: translateX(3px);
+}
+.choice-btn:active { transform: scale(0.98); }
+.choice-btn.selected { border-color: var(--teal); background: rgba(61,217,192,0.06); }
+
+.choice-text {
+  font-size: 14px; color: var(--text); font-weight: 500;
+  line-height: 1.5;
+}
+.choice-effects {
+  display: flex; gap: 5px; flex-wrap: wrap;
+}
+.choice-eff {
+  font-size: 10px; padding: 2px 8px; border-radius: 10px;
+  font-family: 'Space Mono', monospace;
+}
+.choice-eff.pos { background: rgba(77,232,154,0.1); color: var(--green); border: 1px solid rgba(77,232,154,0.2); }
+.choice-eff.neg { background: rgba(255,94,110,0.1); color: var(--red); border: 1px solid rgba(255,94,110,0.2); }
+
+/* RESULT POPUP */
+.result-popup {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.7);
+  display: flex; align-items: flex-end; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s;
+  padding: 0;
+}
+.result-popup.show { opacity: 1; pointer-events: all; }
+.result-popup-inner {
+  width: 100%; max-width: 480px;
+  background: var(--panel2);
+  border: 1px solid var(--border2);
+  border-radius: 24px 24px 0 0;
+  padding: 24px 20px 36px;
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.34,1.1,0.64,1);
+}
+.result-popup.show .result-popup-inner { transform: translateY(0); }
+.result-popup-bar {
+  width: 40px; height: 3px; background: var(--border2); border-radius: 2px;
+  margin: 0 auto 20px;
+}
+.result-choice-echo {
+  font-size: 14px; color: var(--teal); font-weight: 600;
+  margin-bottom: 10px;
+}
+.result-scene-response {
+  font-size: 14px; color: var(--text); line-height: 1.7;
+  margin-bottom: 16px;
+}
+.result-effects-list {
+  display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px;
+}
+.r-eff {
+  font-size: 12px; padding: 4px 12px; border-radius: 20px;
+  font-family: 'Space Mono', monospace; font-weight: 700;
+}
+.r-eff.pos { background: rgba(77,232,154,0.12); color: var(--green); }
+.r-eff.neg { background: rgba(255,94,110,0.12); color: var(--red); }
+
+/* ─── ENDING SCREEN ─── */
+#screen-ending {
+  padding: 40px 20px 80px;
+  gap: 0;
+}
+
+.ending-top {
+  width: 100%; text-align: center; margin-bottom: 28px;
+}
+.ending-badge {
+  display: inline-block;
+  font-size: 10px; letter-spacing: 3px;
+  color: var(--gold); font-family: 'Space Mono', monospace;
+  background: rgba(255,201,94,0.1); border: 1px solid rgba(255,201,94,0.3);
+  padding: 5px 14px; border-radius: 20px; margin-bottom: 16px;
+}
+.ending-emoji { font-size: 60px; margin-bottom: 12px; }
+.ending-title {
+  font-size: 24px; font-weight: 900; line-height: 1.3; margin-bottom: 8px;
+  color: var(--text);
+}
+.ending-title span { color: var(--accent); }
+.ending-subtitle { font-size: 14px; color: var(--text2); }
+
+.ending-card {
+  width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 14px;
+  animation: fadeSlide 0.4s ease both;
+}
+.ending-card:nth-child(1) { animation-delay: 0.1s; }
+.ending-card:nth-child(2) { animation-delay: 0.2s; }
+.ending-card:nth-child(3) { animation-delay: 0.3s; }
+.ending-card:nth-child(4) { animation-delay: 0.4s; }
+.ending-card-title {
+  font-size: 11px; color: var(--text3); letter-spacing: 2px;
+  font-family: 'Space Mono', monospace; margin-bottom: 14px;
+}
+
+/* STAT GRAPH */
+.stat-graph {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.sg-row {
+  display: flex; align-items: center; gap: 10px;
+}
+.sg-name { font-size: 12px; color: var(--text2); min-width: 80px; line-height: 1.3; }
+.sg-bar-bg {
+  flex: 1; height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden;
+}
+.sg-bar-fill {
+  height: 100%; border-radius: 4px; transition: width 0.8s ease 0.4s;
+}
+.sg-val {
+  font-family: 'Space Mono', monospace; font-size: 12px;
+  min-width: 28px; text-align: right;
+}
+
+/* ANALYSIS TEXT */
+.analysis-text {
+  font-size: 14px; color: var(--text); line-height: 1.8;
+}
+.analysis-text .hi { color: var(--teal); font-weight: 700; }
+.analysis-text .hi2 { color: var(--accent2); font-weight: 700; }
+
+/* TAGS */
+.tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+.tag-item {
+  font-size: 12px; padding: 5px 13px; border-radius: 20px;
+  background: rgba(124,111,255,0.1); color: var(--accent2);
+  border: 1px solid rgba(124,111,255,0.25);
+  font-weight: 500;
+}
+
+/* ADVICE */
+.advice-box {
+  background: linear-gradient(135deg, rgba(124,111,255,0.08), rgba(61,217,192,0.06));
+  border: 1px solid rgba(124,111,255,0.2);
+  border-radius: 14px; padding: 18px;
+  margin-top: 6px;
+}
+.advice-from { font-size: 11px; color: var(--accent); margin-bottom: 8px; letter-spacing: 1px; }
+.advice-text { font-size: 14px; color: var(--text); line-height: 1.8; }
+
+/* TIP BOX */
+.tip-list { display: flex; flex-direction: column; gap: 8px; }
+.tip-item {
+  display: flex; gap: 10px; align-items: flex-start;
+  background: rgba(255,255,255,0.03); border-radius: 10px; padding: 12px;
+}
+.tip-icon { font-size: 18px; flex-shrink: 0; }
+.tip-content {}
+.tip-stat-name { font-size: 11px; color: var(--text3); margin-bottom: 3px; }
+.tip-text { font-size: 13px; color: var(--text2); line-height: 1.5; }
+
+.ending-actions {
+  width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: 24px;
+}
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px);
+  background: var(--panel2);
+  border: 1px solid var(--border2);
+  border-radius: 12px; padding: 12px 20px;
+  font-size: 13px; color: var(--text);
+  z-index: 9000; transition: transform 0.3s ease;
+  white-space: nowrap;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* SAVE AREA */
+#save-area {
+  position: fixed; left: -9999px; top: 0;
+  width: 360px; background: var(--bg);
+  padding: 32px 24px;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* TRANSITION */
+.fade-in { animation: fadeIn 0.4s ease; }
+@keyframes fadeIn {
+  from { opacity: 0; } to { opacity: 1; }
+}
+
+/* STAT DELTA FLOAT */
+.stat-delta {
+  position: fixed;
+  font-family: 'Space Mono', monospace;
+  font-size: 14px; font-weight: 700;
+  pointer-events: none; z-index: 300;
+  animation: floatUp 1.2s ease forwards;
+}
+@keyframes floatUp {
+  0% { opacity: 0; transform: translateY(0); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-60px); }
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* SAVE CARD */
+.save-card {
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 28px 24px;
+  font-family: 'Noto Sans KR', sans-serif;
+  color: var(--text);
+}
+.save-card .sc-header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+.save-card .sc-emoji { font-size: 48px; }
+.save-card .sc-titles {}
+.save-card .sc-badge { font-size: 9px; letter-spacing: 2px; color: var(--gold); margin-bottom: 4px; }
+.save-card .sc-title-main { font-size: 18px; font-weight: 900; }
+.save-card .sc-title-main span { color: var(--accent); }
+.save-card .sc-char { font-size: 12px; color: var(--text2); margin-top: 3px; }
+.save-card .sc-stats { margin-bottom: 20px; }
+.save-card .sc-stat-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+.save-card .sc-stat-n { font-size: 11px; color: var(--text2); min-width: 72px; }
+.save-card .sc-bar { flex: 1; height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+.save-card .sc-fill { height: 100%; border-radius: 3px; }
+.save-card .sc-v { font-size: 11px; font-family: 'Space Mono', monospace; color: var(--text2); min-width: 24px; text-align: right; }
+.save-card .sc-analysis { font-size: 12px; color: var(--text2); line-height: 1.7; margin-bottom: 16px; }
+.save-card .sc-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.save-card .sc-tag { font-size: 11px; padding: 3px 10px; border-radius: 10px; background: rgba(124,111,255,0.12); color: var(--accent2); border: 1px solid rgba(124,111,255,0.2); }
+.save-card .sc-foot { margin-top: 16px; font-size: 10px; color: var(--text3); letter-spacing: 1px; font-family: 'Space Mono', monospace; }
+
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<!-- ══════════ TITLE ══════════ -->
+<div id="screen-title" class="screen active">
+  <div class="title-badge">GROWTH SIMULATION v1.0</div>
+  <div class="title-main">《THE<br><span>BALANCE</span>》</div>
+  <div class="title-divider"></div>
+  <div class="title-sub">나의 발달 로그</div>
+  <div class="title-visual">
+    <div class="title-ring"></div>
+    <div class="title-ring"></div>
+    <div class="title-ring"></div>
+    <div class="title-center">⚖️</div>
+  </div>
+  <div class="stat-preview">
+    <span class="stat-chip s1">💪 신체발달</span>
+    <span class="stat-chip s2">💗 성(性)발달</span>
+    <span class="stat-chip s3">🌐 사회·정서</span>
+    <span class="stat-chip s4">🔭 진로발달</span>
+  </div>
+  <p style="font-size:13px;color:var(--text2);text-align:center;line-height:1.7;margin-bottom:32px;padding:0 20px;">
+    초등 5학년 하루 12장면.<br>모든 선택에는 장점과 단점이 있다.<br>너만의 균형을 찾아봐.
+  </p>
+  <button class="btn-primary" onclick="goTo('nickname')">게임 시작 →</button>
+</div>
+
+<!-- ══════════ NICKNAME ══════════ -->
+<div id="screen-nickname" class="screen">
+  <div class="screen-header">
+    <div class="step-label">STEP 01 / 03</div>
+    <div class="screen-title-text">닉네임을 입력해줘</div>
+    <div class="screen-desc">이름은 게임 내 대화에서 계속 사용돼.<br>친구들이 부르는 이름을 써봐.</div>
+  </div>
+  <div class="input-wrap">
+    <label class="input-label">닉네임 (최대 5자)</label>
+    <input type="text" class="text-input" id="nickname-input" maxlength="5" placeholder="이름 입력..." oninput="updateNicknamePreview()">
+  </div>
+  <div class="nickname-preview">
+    <div class="preview-label">PREVIEW</div>
+    <div class="preview-name" id="nick-preview">이름을 입력해봐 <span>✨</span></div>
+  </div>
+  <button class="btn-primary" onclick="confirmNickname()" style="margin-top: auto;">다음 →</button>
+</div>
+
+<!-- ══════════ CHARACTER ══════════ -->
+<div id="screen-character" class="screen">
+  <div class="screen-header" style="padding:0 0 0">
+    <div class="step-label">STEP 02 / 03</div>
+    <div class="screen-title-text">어떤 성향의 캐릭터야?</div>
+    <div class="screen-desc">성향이 초기 스탯에 살짝 영향을 줘.<br>가장 나와 비슷한 걸 골라봐.</div>
+  </div>
+  <div class="char-grid" id="char-grid"></div>
+  <div class="char-selected-display" id="char-display">
+    <div class="char-sel-emoji" id="char-sel-emoji">❓</div>
+    <div class="char-sel-info">
+      <div class="char-sel-label">SELECTED CHARACTER</div>
+      <div class="char-sel-name" id="char-sel-name">캐릭터를 선택해줘</div>
+      <div class="char-sel-desc" id="char-sel-desc">아직 선택 안 됨</div>
+    </div>
+  </div>
+  <button class="btn-primary" onclick="confirmCharacter()">다음 →</button>
+</div>
+
+<!-- ══════════ WAKEUP ══════════ -->
+<div id="screen-wakeup" class="screen">
+  <div class="screen-header">
+    <div class="step-label">STEP 03 / 03</div>
+    <div class="screen-title-text">오늘 몇 시에 일어날까?</div>
+    <div class="screen-desc">기상 시간이 하루의 첫 스탯을 결정해.</div>
+  </div>
+  <div class="time-cards" id="time-cards"></div>
+  <button class="btn-primary" onclick="startGame()">하루 시작 →</button>
+</div>
+
+<!-- ══════════ GAME ══════════ -->
+<div id="screen-game" class="screen">
+  <div class="game-header">
+    <div class="game-top">
+      <div class="game-scene-info">
+        <div class="game-scene-num" id="scene-num">SCENE 01 / 12</div>
+        <div class="game-scene-name" id="scene-name">등교</div>
+      </div>
+      <div class="game-progress-dots" id="progress-dots"></div>
+    </div>
+    <div class="stat-bars">
+      <div class="stat-row">
+        <span class="stat-icon">💪</span>
+        <span class="stat-name">신체</span>
+        <div class="stat-bar-bg"><div class="stat-bar-fill s1" id="bar-physical"></div></div>
+        <span class="stat-val" id="val-physical">50</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-icon">💗</span>
+        <span class="stat-name">성(性)</span>
+        <div class="stat-bar-bg"><div class="stat-bar-fill s2" id="bar-sexual"></div></div>
+        <span class="stat-val" id="val-sexual">50</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-icon">🌐</span>
+        <span class="stat-name">사회</span>
+        <div class="stat-bar-bg"><div class="stat-bar-fill s3" id="bar-social"></div></div>
+        <span class="stat-val" id="val-social">50</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-icon">🔭</span>
+        <span class="stat-name">진로</span>
+        <div class="stat-bar-bg"><div class="stat-bar-fill s4" id="bar-career"></div></div>
+        <span class="stat-val" id="val-career">50</span>
+      </div>
+    </div>
+  </div>
+  <div class="game-body" id="game-body"></div>
+</div>
+
+<!-- RESULT POPUP -->
+<div class="result-popup" id="result-popup">
+  <div class="result-popup-inner">
+    <div class="result-popup-bar"></div>
+    <div class="result-choice-echo" id="rp-choice"></div>
+    <div class="result-scene-response" id="rp-response"></div>
+    <div class="result-effects-list" id="rp-effects"></div>
+    <button class="btn-primary" id="rp-next-btn">다음 장면 →</button>
+  </div>
+</div>
+
+<!-- ══════════ ENDING ══════════ -->
+<div id="screen-ending" class="screen">
+  <div class="ending-top">
+    <div class="ending-badge">FINAL RESULT · 발달 로그</div>
+    <div class="ending-emoji" id="e-emoji">🌟</div>
+    <div class="ending-title" id="e-title">균형잡힌 <span>성장자</span></div>
+    <div class="ending-subtitle" id="e-subtitle">나의 발달 분석 완료</div>
+  </div>
+
+  <!-- stat graph -->
+  <div class="ending-card">
+    <div class="ending-card-title">STAT ANALYSIS · 발달 그래프</div>
+    <div class="stat-graph" id="e-stat-graph"></div>
+  </div>
+
+  <!-- analysis -->
+  <div class="ending-card">
+    <div class="ending-card-title">GROWTH STYLE · 성장 스타일</div>
+    <div class="analysis-text" id="e-analysis"></div>
+    <div class="tag-cloud" id="e-tags"></div>
+  </div>
+
+  <!-- advice -->
+  <div class="ending-card">
+    <div class="ending-card-title">SELF CARE · 자기관리 팁</div>
+    <div class="tip-list" id="e-tips"></div>
+  </div>
+
+  <!-- future letter -->
+  <div class="ending-card">
+    <div class="ending-card-title">FUTURE LETTER · 미래의 내가</div>
+    <div class="advice-box">
+      <div class="advice-from">📬 미래의 <span id="e-future-name"></span>이/가 보낸 편지</div>
+      <div class="advice-text" id="e-letter"></div>
+    </div>
+  </div>
+
+  <div class="ending-actions">
+    <button class="btn-primary" onclick="saveResult()">📸 결과 이미지 저장</button>
+    <button class="btn-secondary" onclick="restartGame()">다시 플레이하기</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════
+// GAME DATA
+// ═══════════════════════════════════════════════
+
+const CHARACTERS = [
+  { id:'c1', emoji:'⚡', tag:'에너지 과충전된', gender:'남', desc:'활동량이 많고 쉬는 게 어려워', init:{physical:+8, sexual:+2, social:+5, career:-3} },
+  { id:'c2', emoji:'📋', tag:'플래너 없으면 불안한', gender:'남', desc:'계획이 흐트러지면 스트레스가 폭발', init:{physical:-2, sexual:+0, social:+3, career:+8} },
+  { id:'c3', emoji:'💬', tag:'단톡방 지분율 높은', gender:'남', desc:'대화가 많고 관계에 에너지를 쏟아', init:{physical:+0, sexual:+5, social:+10, career:-3} },
+  { id:'c4', emoji:'🌙', tag:'혼자 상상 자주 하는', gender:'남', desc:'내면 세계가 풍부하고 혼자 시간 선호', init:{physical:-3, sexual:+8, social:-3, career:+5} },
+  { id:'c5', emoji:'🌺', tag:'감정 표현이 솔직한', gender:'여', desc:'기분이 얼굴에 다 드러나는 타입', init:{physical:+2, sexual:+8, social:+5, career:-2} },
+  { id:'c6', emoji:'📚', tag:'모든 걸 메모하는', gender:'여', desc:'기억보다 기록을 믿는 꼼꼼한 성격', init:{physical:-2, sexual:+0, social:+0, career:+10} },
+  { id:'c7', emoji:'👑', tag:'분위기 리더인', gender:'여', desc:'자연스럽게 중심이 되는 스타일', init:{physical:+3, sexual:+3, social:+9, career:+0} },
+  { id:'c8', emoji:'🎨', tag:'만들기 좋아하는', gender:'여', desc:'뭔가 직접 만들 때 행복한 창작형', init:{physical:+0, sexual:+5, social:-2, career:+8} },
+];
+
+const WAKE_OPTIONS = [
+  { time:'6:30', name:'일찍 기상', desc:'여유있게 준비, 아침밥 OK', effects:{physical:+5, sexual:-3, social:+3, career:+5}, effs:[{t:'신체 ↑5',p:true},{t:'진로 ↑5',p:true},{t:'성적발달 ↓3',p:false}] },
+  { time:'7:00', name:'적당한 기상', desc:'딱 맞는 시간, 여유 보통', effects:{physical:+3, sexual:+3, social:+3, career:+3}, effs:[{t:'전체 균형',p:true}] },
+  { time:'7:30', name:'늦잠', desc:'피곤함 해소, 아침은 포기', effects:{physical:+8, sexual:+5, social:-3, career:-3}, effs:[{t:'신체 ↑8',p:true},{t:'사회 ↓3',p:false},{t:'진로 ↓3',p:false}] },
+];
+
+const SCENES = [
+  {
+    id:'school-go', name:'등교', time:'08:10 AM', emoji:'🚶',
+    situation:'{name}아, 오늘 학교 가는 길에 친한 친구 {name}이가 문자를 보냈어. "나 오늘 기분 별로야, 나랑 얘기해줄 수 있어?"',
+    dialogue:'"나 요즘 좀 힘들어. 걔가 나한테 왜 그런 거야?"',
+    choices:[
+      { text:'걸으면서 전화해서 들어준다', effects:{physical:-3, sexual:-2, social:+10, career:-2}, pos:['사회 ↑10'], neg:['신체 ↓3','진로 ↓2'], tags:['감정숨김형'], response:'친구 목소리를 들으니 마음이 한결 따뜻해졌어. 그런데 걷다가 발을 삐끗했어...' },
+      { text:'"학교 가서 직접 얘기해!" 하고 미룬다', effects:{physical:+3, sexual:+2, social:-3, career:+3}, pos:['신체 ↑3','진로 ↑3'], neg:['사회 ↓3'], tags:['눈치형'], response:'몸은 편하게 갔는데, 친구 표정이 조금 서운해 보였어.' },
+      { text:'짧게 "나 이따 들어줄게 힘내!" 답장한다', effects:{physical:+2, sexual:+3, social:+3, career:+2}, pos:['사회 ↑3','진로 ↑2'], neg:[], tags:[], response:'짧지만 진심이 담긴 메시지. 친구가 "고마워" 하고 답장 왔어. 균형 있는 선택이었어.' },
+    ]
+  },
+  {
+    id:'class', name:'수업시간', time:'09:00 AM', emoji:'📖',
+    situation:'수학 시간에 선생님이 어려운 문제를 칠판에 적었어. {name}이는 풀 것 같은데, 손 들어야 할지 말아야 할지 고민돼.',
+    dialogue:'"이거 풀 수 있는 사람?" 선생님이 두리번거렸어.',
+    choices:[
+      { text:'자신 없지만 손을 든다', effects:{physical:-2, sexual:+5, social:+5, career:+8}, pos:['진로 ↑8','사회 ↑5'], neg:['신체 ↓2'], tags:['도전형'], response:'틀렸지만 "좋은 시도야"라는 칭찬을 받았어. 다음엔 더 잘할 수 있을 것 같았어.' },
+      { text:'모르는 척 딴 데 본다', effects:{physical:+2, sexual:-5, social:-2, career:-3}, pos:['신체 ↑2'], neg:['성적 ↓5','진로 ↓3'], tags:['감정숨김형'], response:'안 틀려서 창피는 안 당했어. 근데 왜 이렇게 찜찜하지...' },
+      { text:'옆 친구에게 조용히 물어보고 같이 생각한다', effects:{physical:+0, sexual:+5, social:+7, career:+3}, pos:['사회 ↑7','성적 ↑5'], neg:[], tags:['눈치형'], response:'같이 생각하다 보니 풀렸어! 선생님도 흐뭇하게 봤어.' },
+    ]
+  },
+  {
+    id:'break', name:'쉬는시간', time:'10:30 AM', emoji:'💤',
+    situation:'10분 쉬는 시간이야. 어제 잠이 좀 부족해서 졸려. 근데 친구들이 운동장 나가자고 해.',
+    dialogue:'"야 {name}아, 같이 달리기 하러 가자! 안 가면 섭섭해!"',
+    choices:[
+      { text:'운동장 가서 같이 뛴다', effects:{physical:+5, sexual:-3, social:+7, career:-2}, pos:['신체 ↑5','사회 ↑7'], neg:['성적 ↓3'], tags:['도전형'], response:'달리다 보니 졸음이 싹 날아갔어! 근데 다음 수업 집중하기 살짝 힘들었어.' },
+      { text:'엎드려서 짧게 눈을 붙인다', effects:{physical:+7, sexual:+3, social:-5, career:+2}, pos:['신체 ↑7','진로 ↑2'], neg:['사회 ↓5'], tags:['야행성','미루기형'], response:'10분 잠이 꿀이었어. 다음 수업은 개운했는데, 친구들이 좀 삐진 것 같아.' },
+      { text:'교실에 남아 혼자 그림 그리며 쉰다', effects:{physical:+3, sexual:+7, social:-2, career:+5}, pos:['성적 ↑7','진로 ↑5'], neg:['사회 ↓2'], tags:['혼자형'], response:'혼자만의 시간이 생각보다 좋았어. 뭔가 나만의 세계를 찾은 기분.' },
+    ]
+  },
+  {
+    id:'lunch', name:'급식시간', time:'12:00 PM', emoji:'🍱',
+    situation:'급식실에서 줄 서는데 친하지 않은 애가 새치기를 했어. 뒤에 있던 친구가 {name}이를 보며 눈짓해.',
+    dialogue:'"야, 그냥 냅둬?" vs "네가 말해봐" 눈빛 싸움 중...',
+    choices:[
+      { text:'"야, 줄 서야지" 하고 직접 말한다', effects:{physical:-2, sexual:+3, social:+8, career:+5}, pos:['사회 ↑8','진로 ↑5'], neg:['신체 ↓2'], tags:['도전형'], response:'심장은 쿵쾅댔지만 말했어. 상대가 당황해서 뒤로 갔어. 뒤 친구가 엄지를 들어줬어.' },
+      { text:'그냥 모른 척하고 참는다', effects:{physical:+3, sexual:-5, social:-3, career:-2}, pos:['신체 ↑3'], neg:['성적 ↓5','사회 ↓3'], tags:['감정숨김형','눈치형'], response:'스트레스를 꾹 참았어. 밥 먹는 내내 기분이 별로였어. 그리고 나 자신이 좀 답답했어.' },
+      { text:'선생님께 조용히 알린다', effects:{physical:+2, sexual:+5, social:+3, career:+3}, pos:['성적 ↑5','사회 ↑3'], neg:[], tags:['눈치형'], response:'선생님이 정리해줬어. 직접 말하는 것보다는 덜 떨렸는데, 스스로 해결한 느낌은 덜했어.' },
+    ]
+  },
+  {
+    id:'lunch2', name:'점심시간', time:'12:30 PM', emoji:'⚽',
+    situation:'점심 먹고 자유 시간이야. 친구들이 축구하자는데, 숙제를 지금 해두면 저녁이 편해.',
+    dialogue:'"야 {name}아, 안 나오면 팀 구성 안 되잖아!"',
+    choices:[
+      { text:'숙제 먼저 해두고 나간다', effects:{physical:-3, sexual:+0, social:-3, career:+8}, pos:['진로 ↑8'], neg:['신체 ↓3','사회 ↓3'], tags:['완벽주의'], response:'숙제를 다 끝냈어. 뿌듯한데 친구들이 이미 다 들어가버렸어...' },
+      { text:'축구 먼저 실컷 한다', effects:{physical:+8, sexual:-3, social:+8, career:-5}, pos:['신체 ↑8','사회 ↑8'], neg:['진로 ↓5'], tags:['미루기형'], response:'최고의 점심시간이었어! 근데 저녁에 숙제가 기다리고 있어...' },
+      { text:'30분만 뛰고 돌아온다', effects:{physical:+5, sexual:+0, social:+4, career:+3}, pos:['신체 ↑5','사회 ↑4','진로 ↑3'], neg:[], tags:[], response:'시간을 잘 나눴어. 친구들도 만족하고 나도 여유 있는 오후였어.' },
+    ]
+  },
+  {
+    id:'presentation', name:'발표·모둠활동', time:'14:00 PM', emoji:'🎤',
+    situation:'사회 시간에 모둠 발표야. 근데 우리 팀에서 {name}이가 제일 잘 알고 있어. 발표를 맡을지 말지 고민.',
+    dialogue:'"우리 누가 발표할 건지 정하자. 다들 하기 싫어하는 눈치야."',
+    choices:[
+      { text:'내가 대표로 발표하겠다고 한다', effects:{physical:-2, sexual:+3, social:+8, career:+10}, pos:['진로 ↑10','사회 ↑8'], neg:['신체 ↓2'], tags:['도전형'], response:'엄청 떨렸지만 해냈어! 선생님이 "발표 잘했어" 하고 칭찬해줬어. 자신감이 올라가는 느낌이었어.' },
+      { text:'같이 나눠서 각자 한 파트씩 한다', effects:{physical:+0, sexual:+3, social:+5, career:+5}, pos:['사회 ↑5','진로 ↑5','성적 ↑3'], neg:[], tags:[], response:'협력해서 완성했어. 혼자 다 하는 것보다 팀이 함께하는 게 더 좋을 수도 있어.' },
+      { text:'다른 친구가 발표하고 나는 자료 정리를 맡는다', effects:{physical:+3, sexual:-3, social:+2, career:+3}, pos:['신체 ↑3','사회 ↑2'], neg:['성적 ↓3'], tags:['감정숨김형'], response:'발표는 피했어. 근데 선생님이 "넌 왜 안 했어?" 하고 물어봐서 살짝 당황했어.' },
+    ]
+  },
+  {
+    id:'academy', name:'학원', time:'16:30 PM', emoji:'🏫',
+    situation:'수학 학원에서 오늘 진도를 나갔는데 이해가 잘 안 됐어. 학원 선생님한테 다시 물어볼지 그냥 집에서 혼자 해볼지 고민.',
+    dialogue:'"다들 이해했죠? 그럼 문제 풀어봐요."',
+    choices:[
+      { text:'손 들고 "저 이해 못 했어요" 한다', effects:{physical:-2, sexual:+0, social:+5, career:+8}, pos:['진로 ↑8','사회 ↑5'], neg:['신체 ↓2'], tags:['도전형'], response:'용기 내서 물어봤어! 선생님이 다시 설명해줬고, 이번엔 이해됐어. 좀 창피했지만 할 만했어.' },
+      { text:'이해한 척하고 집에서 유튜브 찾아본다', effects:{physical:+3, sexual:+3, social:-2, career:+3}, pos:['신체 ↑3','성적 ↑3','진로 ↑3'], neg:['사회 ↓2'], tags:['미루기형'], response:'유튜브 강의가 의외로 잘 설명해줬어! 근데 학원 시간을 제대로 못 쓴 기분은 들었어.' },
+      { text:'친구에게 쪽지 보내서 같이 해결한다', effects:{physical:+0, sexual:+5, social:+7, career:+2}, pos:['사회 ↑7','성적 ↑5'], neg:[], tags:['눈치형'], response:'친구도 몰라서 같이 유튜브 봤어. 혼자가 아니니 덜 힘들었어. 근데 완벽히 이해는 못 했어.' },
+    ]
+  },
+  {
+    id:'dinner', name:'저녁식사', time:'18:30 PM', emoji:'🍚',
+    situation:'저녁 먹는 데 엄마가 "오늘 학교 어땠어?" 물어봤어. 사실 오늘 힘든 일이 있었는데.',
+    dialogue:'"별일 없지? 밥 잘 먹어야 키 크지~"',
+    choices:[
+      { text:'솔직하게 힘들었던 일 얘기한다', effects:{physical:+0, sexual:+8, social:+7, career:+0}, pos:['성적 ↑8','사회 ↑7'], neg:[], tags:['도전형'], response:'엄마가 생각보다 잘 들어줬어. "그랬구나, 많이 힘들었겠다"는 말에 눈물이 날 것 같았어.' },
+      { text:'"괜찮아" 하고 빨리 밥 먹는다', effects:{physical:+5, sexual:-5, social:-3, career:+0}, pos:['신체 ↑5'], neg:['성적 ↓5','사회 ↓3'], tags:['감정숨김형'], response:'속으로는 여전히 무거웠어. 배는 불렀는데 마음이 채워지지 않은 느낌.' },
+      { text:'일부만 얘기하고 나머지는 혼자 삭힌다', effects:{physical:+3, sexual:+3, social:+3, career:+0}, pos:['신체 ↑3','성적 ↑3'], neg:[], tags:['눈치형'], response:'완전히 다 털어놓진 않았지만, 조금은 가벼워진 기분. 선택적 공유도 방법이야.' },
+    ]
+  },
+  {
+    id:'homework', name:'숙제', time:'20:00 PM', emoji:'📝',
+    situation:'숙제할 시간인데 오늘 꽤 힘들었어. 음악 틀어놓고 하면 좀 나을 것 같기도 하고, 스마트폰 보고 싶기도 해.',
+    dialogue:'"숙제 안 하면 내일이 힘들어" vs "지금 너무 지쳐..."',
+    choices:[
+      { text:'음악 끄고 집중해서 빨리 끝낸다', effects:{physical:-3, sexual:-2, social:+0, career:+10}, pos:['진로 ↑10'], neg:['신체 ↓3','성적 ↓2'], tags:['완벽주의'], response:'45분 만에 끝냈어! 뿌듯한데 눈이 아파. 오늘 하루 다 쏟아낸 기분이야.' },
+      { text:'음악 틀고 천천히 즐기며 한다', effects:{physical:+2, sexual:+5, social:+0, career:+5}, pos:['성적 ↑5','진로 ↑5','신체 ↑2'], neg:[], tags:[], response:'좀 오래 걸렸지만 기분은 좋았어. 집중력은 좀 들쭉날쭉했지만 끝은 냈어.' },
+      { text:'30분만 폰 보다가 한다 (그리고 진짜 한다)', effects:{physical:+5, sexual:-5, social:+3, career:-3}, pos:['신체 ↑5','사회 ↑3'], neg:['성적 ↓5','진로 ↓3'], tags:['미루기형','야행성'], response:'30분이 1시간이 됐어... 결국 숙제는 했지만 많이 늦어졌어.' },
+    ]
+  },
+  {
+    id:'leisure', name:'여가시간', time:'21:00 PM', emoji:'🎮',
+    situation:'숙제 끝! 이제 자유 시간인데 30분밖에 없어. 뭘 할까?',
+    dialogue:'"오늘 하루 수고했어, {name}아. 이제 네 시간이야."',
+    choices:[
+      { text:'게임이나 유튜브로 빠르게 쉰다', effects:{physical:+0, sexual:+5, social:+3, career:-3}, pos:['성적 ↑5','사회 ↑3'], neg:['진로 ↓3'], tags:['야행성'], response:'잠깐 봤는데 재밌어서 시간이 훅 지나갔어. 몸은 쉬어지는데 뇌는 더 깨어버렸어.' },
+      { text:'스트레칭이나 산책으로 몸을 푼다', effects:{physical:+8, sexual:+2, social:+0, career:+3}, pos:['신체 ↑8','진로 ↑3'], neg:[], tags:[], response:'몸이 개운해졌어. 오늘 하루의 긴장이 풀리는 느낌. 이게 진짜 쉬는 거구나.' },
+      { text:'일기를 쓰며 오늘을 정리한다', effects:{physical:+2, sexual:+8, social:+0, career:+5}, pos:['성적 ↑8','진로 ↑5'], neg:[], tags:['완벽주의'], response:'오늘 있었던 일들을 쓰다 보니 마음이 차분해졌어. 나를 이해하는 시간이 됐어.' },
+    ]
+  },
+  {
+    id:'chat', name:'단톡방', time:'21:30 PM', emoji:'💬',
+    situation:'단톡방이 엄청 빠르게 올라가. 오늘 학교에서 있었던 일 얘기 + 내일 준비물 공유 + 그냥 드립 치는 애들까지.',
+    dialogue:'"야 {name}아 오늘 그 상황 봤어? 존나 웃겼다ㅋㅋ"',
+    choices:[
+      { text:'다 읽고 적극적으로 참여한다', effects:{physical:-5, sexual:+3, social:+10, career:-3}, pos:['사회 ↑10'], neg:['신체 ↓5','진로 ↓3'], tags:['야행성'], response:'다들 반응이 좋아서 재밌었어! 근데 어느새 자야 할 시간이 훌쩍 지나버렸어.' },
+      { text:'준비물만 확인하고 조용히 나온다', effects:{physical:+3, sexual:+2, social:-2, career:+3}, pos:['신체 ↑3','진로 ↑3'], neg:['사회 ↓2'], tags:['눈치형'], response:'필요한 것만 챙기고 빠졌어. 좀 소외된 느낌도 들었지만 수면 시간이 확보됐어.' },
+      { text:'30분만 보다가 폰을 뒤집어 놓는다', effects:{physical:+2, sexual:+3, social:+4, career:+2}, pos:['사회 ↑4','성적 ↑3'], neg:[], tags:[], response:'적당히 참여하고 선을 그었어. 관계도 챙기고 수면도 챙기는 균형 잡힌 선택이었어.' },
+    ]
+  },
+  {
+    id:'sleep', name:'취침', time:'22:00 PM', emoji:'🌙',
+    situation:'이제 잘 시간이야. 오늘 하루가 머릿속을 맴돌아. 오늘 잘 했는지, 부족한 건 없었는지...',
+    dialogue:'"내일 또 잘 해낼 수 있을까?"',
+    choices:[
+      { text:'오늘 잘한 것 3가지를 생각하며 눕는다', effects:{physical:+5, sexual:+8, social:+3, career:+5}, pos:['성적 ↑8','진로 ↑5','신체 ↑5'], neg:[], tags:[], response:'뿌듯한 마음으로 눈을 감았어. "나 오늘 꽤 잘 했어." 내일도 잘할 수 있을 것 같았어.' },
+      { text:'오늘 못 한 것들을 반성하며 내일 계획 세운다', effects:{physical:-3, sexual:+5, social:-2, career:+8}, pos:['진로 ↑8','성적 ↑5'], neg:['신체 ↓3','사회 ↓2'], tags:['완벽주의'], response:'계획을 다 세웠는데 잠이 안 와. 머릿속이 아직도 바쁘게 돌아가고 있어...' },
+      { text:'그냥 아무 생각 없이 바로 잔다', effects:{physical:+8, sexual:-3, social:+0, career:-2}, pos:['신체 ↑8'], neg:['성적 ↓3','진로 ↓2'], tags:['야행성'], response:'바로 쓰러졌어. 몸은 최고로 쉬었는데, 내일이 오면 오늘이 이미 흐릿해져 있을 것 같아.' },
+    ]
+  },
+];
+
+// 성(性)발달 장면 - 남학생용 / 여학생용
+const SEXUAL_DEV_SCENES = {
+  '남': {
+    id:'sexual-dev-m', name:'몸의 변화', time:'13:20 PM', emoji:'🪞',
+    situation:'체육 수업이 끝나고 탈의실에서 옷 갈아입는데, 최근에 목소리가 갑자기 갈라지고 겨드랑이에 털이 나기 시작한 게 신경 쓰여. 근데 친구가 갑자기 큰 소리로 "{name}아, 너 목소리 왜 그래? ㅋㅋㅋ" 하고 놀렸어.',
+    dialogue:'"야, 너 변성기 왔어? 완전 아저씨 됐다ㅋㅋ"',
+    choices:[
+      {
+        text:'"원래 다 이렇게 되는 거야" 하고 쿨하게 넘긴다',
+        effects:{ physical:+3, sexual:+10, social:+5, career:+3 },
+        pos:['성(性) ↑10','사회 ↑5'], neg:[],
+        tags:['도전형'],
+        response:'쿨하게 받아쳤어. 사실 속으로는 좀 신경 쓰였지만, 변성기가 성장의 자연스러운 신호라는 걸 알고 있어서 크게 흔들리지 않았어. 오히려 친구가 "아 그래?" 하고 넘어갔어.'
+      },
+      {
+        text:'창피해서 얼굴 빨개지고 아무 말도 못 한다',
+        effects:{ physical:-2, sexual:-5, social:-5, career:+0 },
+        pos:[], neg:['성(性) ↓5','사회 ↓5'],
+        tags:['감정숨김형'],
+        response:'얼굴이 화끈해졌어. 변화가 창피하게 느껴졌어. 근데 사실 이건 나만 겪는 게 아닌데... 집에서 혼자 관련 내용을 찾아보고 싶어졌어.'
+      },
+      {
+        text:'집에 가서 보건 선생님께 물어볼 게 생겼다고 메모한다',
+        effects:{ physical:+2, sexual:+8, social:+2, career:+5 },
+        pos:['성(性) ↑8','진로 ↑5'], neg:[],
+        tags:['완벽주의'],
+        response:'잘 모르는 건 제대로 알아보기로 했어. 보건 선생님이 친절하게 2차성징에 대해 설명해줬어. 알고 나니 훨씬 마음이 편해졌어.'
+      },
+    ]
+  },
+  '여': {
+    id:'sexual-dev-f', name:'몸의 변화', time:'13:20 PM', emoji:'🪞',
+    situation:'점심시간에 화장실 갔다가 생리가 시작된 것 같은 느낌이 들었어. 아직 처음이라 어떻게 해야 할지 모르겠고, 갑자기 당황스러워. 친한 친구한테 말해야 할지, 혼자 해결해야 할지 고민돼.',
+    dialogue:'"어... 이거 어떻게 하지. 준비물도 없는데..."',
+    choices:[
+      {
+        text:'친한 친구에게 조용히 귓속말로 도움을 청한다',
+        effects:{ physical:+3, sexual:+10, social:+8, career:+2 },
+        pos:['성(性) ↑10','사회 ↑8'], neg:[],
+        tags:['도전형'],
+        response:'친구가 생리대를 가방에서 꺼내줬어. "나도 이런 적 있었어, 괜찮아"라는 말이 엄청 위로가 됐어. 혼자 끌어안지 않길 잘했어.'
+      },
+      {
+        text:'혼자 참고 보건실에 몰래 가서 해결한다',
+        effects:{ physical:-3, sexual:+3, social:+2, career:+4 },
+        pos:['성(性) ↑3','진로 ↑4'], neg:['신체 ↓3'],
+        tags:['감정숨김형'],
+        response:'혼자 해결하긴 했어. 보건 선생님이 챙겨주셨어. 근데 배가 좀 아프고 긴장했던 탓에 오후 내내 피로했어. 혼자 감당하려고 너무 힘을 썼어.'
+      },
+      {
+        text:'당황스럽지만 "이건 자연스러운 거야" 하고 마음속으로 다독인다',
+        effects:{ physical:+2, sexual:+7, social:+2, career:+3 },
+        pos:['성(性) ↑7'], neg:[],
+        tags:['눈치형'],
+        response:'스스로를 진정시켰어. "내 몸이 성장하고 있다는 신호야"라고 생각하니 조금 덜 무서웠어. 나중에 집에서 엄마한테도 이야기할 수 있었어.'
+      },
+    ]
+  }
+};
+
+const ENDINGS = [
+  { minStats:['physical','social'], emoji:'⚡', title:'활동하는 사회인', subtitle:'몸도 관계도 놓치지 않는 타입', analysis:'신체적으로 건강하고 관계를 소중히 여기는 스타일이야. 에너지를 사람들과 함께 쓰는 걸 좋아해. 혼자만의 시간과 내면 성장도 조금씩 시도해봐.' },
+  { minStats:['physical','career'], emoji:'🏃', title:'성실한 실행자', subtitle:'몸과 미래를 동시에 챙기는 타입', analysis:'오늘 할 일을 오늘 끝내는 스타일이야. 목표를 향해 꾸준히 가는 힘이 있어. 지나친 완벽주의는 내려놓고 쉬는 것도 계획에 넣어봐.' },
+  { minStats:['sexual','social'], emoji:'💗', title:'감성 연결자', subtitle:'자신의 감정과 관계를 모두 중요시하는 타입', analysis:'자기 감정을 잘 인식하고 타인과의 관계에서도 에너지를 얻어. 내면적으로 풍부한 사람이야. 진로나 목표에 대한 탐색도 시작해보면 어떨까?' },
+  { minStats:['sexual','career'], emoji:'🌙', title:'사색하는 탐험가', subtitle:'내면과 미래를 깊이 파고드는 타입', analysis:'혼자 생각하고 탐구하는 걸 좋아하는 스타일이야. 자기 자신을 깊이 알아가고 있어. 가끔은 그 생각들을 친구들과 나눠보는 시간도 가져봐.' },
+  { minStats:['social','career'], emoji:'👑', title:'관계형 리더', subtitle:'사람과 목표를 동시에 이끄는 타입', analysis:'팀 안에서 빛나고 함께할 때 더 잘 되는 스타일이야. 리더십의 씨앗이 보여. 혼자서 자기를 돌보는 시간도 똑같이 중요하다는 걸 기억해.' },
+  { minStats:['physical','sexual'], emoji:'🌿', title:'자기 돌봄 실천자', subtitle:'몸과 마음을 균형 있게 챙기는 타입', analysis:'신체 건강과 정서 건강을 잘 챙기고 있어. 자기 자신을 가장 잘 돌볼 수 있는 사람이야. 이 좋은 에너지를 관계와 진로에도 조금씩 투자해봐.' },
+];
+
+const TIPS = {
+  physical: { icon:'💪', name:'신체발달', tip:'규칙적인 수면과 운동이 도움이 돼. 하루 20분 스트레칭이나 산책만으로도 달라져.' },
+  sexual: { icon:'💗', name:'성(性)발달', tip:'몸의 변화는 자연스러운 성장 과정이야. 궁금한 점은 믿을 수 있는 어른에게 솔직하게 물어보는 게 제일 좋아.' },
+  social: { icon:'🌐', name:'사회·정서발달', tip:'작은 대화부터 시작해봐. "오늘 기분 어때?"라고 먼저 물어보는 것만으로도 관계가 달라져.' },
+  career: { icon:'🔭', name:'진로발달', tip:'좋아하는 것을 노트에 적어봐. "잘 못해도 계속 하고 싶은 것"이 진로의 씨앗이야.' },
+};
+
+const FUTURE_LETTERS = {
+  physical: '지금 몸 쓰는 거 아낀다고 나중에 저절로 건강해지진 않아. 오늘 조금이라도 움직인 날들이 나를 만들었어.',
+  sexual: '네 감정은 틀리지 않았어. 그냥 복잡했던 거야. 그걸 숨기지 않고 조금씩 꺼내놓은 날들이 지금의 나를 이해하게 해줬어.',
+  social: '친구한테 먼저 연락하는 게 얼마나 용감한 일인지 나중엔 알게 돼. 지금 그 어색함이 나중의 깊은 관계를 만들어.',
+  career: '지금 뭘 좋아하는지 몰라도 괜찮아. 좋아하는 게 하나씩 생길 때마다 메모해둬. 그게 다 나중에 연결돼.',
+};
+
+// ═══════════════════════════════════════════════
+// GAME STATE
+// ═══════════════════════════════════════════════
+let state = {
+  nickname: '',
+  character: null,
+  stats: { physical:50, sexual:50, social:50, career:50 },
+  sceneIndex: 0,
+  tags: {},
+  choicesMade: [],
+};
+
+function clamp(v){ return Math.max(0, Math.min(100, v)); }
+
+function applyEffects(effects) {
+  Object.keys(effects).forEach(k => {
+    state.stats[k] = clamp(state.stats[k] + effects[k]);
+  });
+  updateStatBars();
+}
+
+function addTag(tag) {
+  if(!tag) return;
+  state.tags[tag] = (state.tags[tag]||0) + 1;
+}
+
+function getTopTags() {
+  return Object.entries(state.tags)
+    .sort((a,b)=>b[1]-a[1])
+    .slice(0,4)
+    .map(e=>e[0]);
+}
+
+// ═══════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ═══════════════════════════════════════════════
+// NICKNAME
+// ═══════════════════════════════════════════════
+function updateNicknamePreview(){
+  const v = document.getElementById('nickname-input').value;
+  const el = document.getElementById('nick-preview');
+  el.innerHTML = v ? `<span>${v}</span>` : '이름을 입력해봐 <span>✨</span>';
+}
+
+function confirmNickname(){
+  const v = document.getElementById('nickname-input').value.trim();
+  if(!v){ showToast('닉네임을 입력해줘!'); return; }
+  state.nickname = v;
+  buildCharacterScreen();
+  goTo('character');
+}
+
+// ═══════════════════════════════════════════════
+// CHARACTER
+// ═══════════════════════════════════════════════
+function buildCharacterScreen(){
+  const grid = document.getElementById('char-grid');
+  grid.innerHTML = '';
+  CHARACTERS.forEach((c,i)=>{
+    const el = document.createElement('div');
+    el.className = 'char-card';
+    el.innerHTML = `<div class="char-emoji">${c.emoji}</div><div class="char-tag">${c.tag}</div><div class="char-gender">${c.gender}학생 스타일</div>`;
+    el.onclick = () => selectChar(c, el);
+    grid.appendChild(el);
+  });
+}
+
+function selectChar(c, el){
+  document.querySelectorAll('.char-card').forEach(x=>x.classList.remove('selected'));
+  el.classList.add('selected');
+  state.character = c;
+  document.getElementById('char-sel-emoji').textContent = c.emoji;
+  document.getElementById('char-sel-name').innerHTML = `<span>${c.tag}</span> ${state.nickname}`;
+  document.getElementById('char-sel-desc').textContent = c.desc;
+}
+
+function confirmCharacter(){
+  if(!state.character){ showToast('캐릭터를 선택해줘!'); return; }
+  Object.keys(state.character.init).forEach(k=>{
+    state.stats[k] = clamp(50 + state.character.init[k]);
+  });
+  buildWakeupScreen();
+  goTo('wakeup');
+}
+
+// ═══════════════════════════════════════════════
+// WAKEUP
+// ═══════════════════════════════════════════════
+let selectedWake = null;
+
+function buildWakeupScreen(){
+  const wrap = document.getElementById('time-cards');
+  wrap.innerHTML = '';
+  WAKE_OPTIONS.forEach((w,i)=>{
+    const el = document.createElement('div');
+    el.className = 'time-card';
+    const effHTML = w.effs.map(e=>`<span class="effect-tag ${e.p?'up':'down'}">${e.t}</span>`).join('');
+    el.innerHTML = `
+      <div class="time-big">${w.time}</div>
+      <div class="time-info">
+        <div class="time-name">${w.name}</div>
+        <div class="time-desc">${w.desc}</div>
+        <div class="time-effect">${effHTML}</div>
+      </div>`;
+    el.onclick = ()=>{
+      document.querySelectorAll('.time-card').forEach(x=>x.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedWake = w;
+    };
+    wrap.appendChild(el);
+  });
+}
+
+function startGame(){
+  if(!selectedWake){ showToast('기상 시간을 선택해줘!'); return; }
+  applyEffects(selectedWake.effects);
+
+  // 성별에 맞는 성(性)발달 장면을 점심시간(index 4) 뒤에 삽입
+  const gender = state.character ? state.character.gender : '남';
+  const sexScene = SEXUAL_DEV_SCENES[gender];
+  // 이미 삽입되어 있지 않으면 삽입
+  if(!SCENES.find(s => s.id === sexScene.id)){
+    SCENES.splice(5, 0, sexScene); // 점심시간(index 4) 다음 자리
+  }
+
+  state.sceneIndex = 0;
+  buildProgressDots();
+  renderScene();
+  goTo('game');
+}
+
+// ═══════════════════════════════════════════════
+// GAME
+// ═══════════════════════════════════════════════
+function buildProgressDots(){
+  const wrap = document.getElementById('progress-dots');
+  wrap.innerHTML = '';
+  SCENES.forEach((_,i)=>{
+    const d = document.createElement('div');
+    d.className = 'dot' + (i===0?' current':'');
+    d.id = `dot-${i}`;
+    wrap.appendChild(d);
+  });
+}
+
+function updateProgressDots(){
+  SCENES.forEach((_,i)=>{
+    const d = document.getElementById(`dot-${i}`);
+    if(!d) return;
+    d.className = 'dot' + (i < state.sceneIndex ? ' done' : i===state.sceneIndex ? ' current' : '');
+  });
+}
+
+function updateStatBars(){
+  const s = state.stats;
+  ['physical','sexual','social','career'].forEach(k=>{
+    const map = {physical:'physical',sexual:'sexual',social:'social',career:'career'};
+    const bar = document.getElementById('bar-'+k);
+    const val = document.getElementById('val-'+k);
+    if(bar){ bar.style.width = s[k]+'%'; }
+    if(val){ val.textContent = s[k]; }
+  });
+}
+
+function insertName(str){ return str.replace(/{name}/g, state.nickname); }
+
+function renderScene(){
+  const sc = SCENES[state.sceneIndex];
+  document.getElementById('scene-num').textContent = `SCENE ${String(state.sceneIndex+1).padStart(2,'0')} / ${SCENES.length}`;
+  document.getElementById('scene-name').textContent = sc.name;
+  updateStatBars();
+  updateProgressDots();
+
+  const body = document.getElementById('game-body');
+  const choicesHTML = sc.choices.map((c,i)=>{
+    return `
+      <div class="choice-btn" onclick="makeChoice(${i})">
+        <div class="choice-text">${c.text}</div>
+      </div>`;
+  }).join('');
+
+  body.innerHTML = `
+    <div class="scene-card">
+      <div class="scene-time">${sc.time} · ${sc.name}</div>
+      <span class="scene-emoji">${sc.emoji}</span>
+      <div class="scene-situation">${insertName(sc.situation)}</div>
+      ${sc.dialogue ? `<div class="scene-dialogue">${insertName(sc.dialogue)}</div>` : ''}
+    </div>
+    <div class="choices-label">CHOOSE YOUR ACTION</div>
+    <div class="choices-wrap">${choicesHTML}</div>`;
+}
+
+function makeChoice(idx){
+  const sc = SCENES[state.sceneIndex];
+  const choice = sc.choices[idx];
+
+  // mark selected
+  document.querySelectorAll('.choice-btn').forEach((b,i)=>{
+    b.style.pointerEvents = 'none';
+    if(i===idx) b.classList.add('selected');
+  });
+
+  // apply effects
+  const prevStats = {...state.stats};
+  applyEffects(choice.effects);
+
+  // add tags
+  if(choice.tags) choice.tags.forEach(t=>addTag(t));
+
+  state.choicesMade.push({scene:sc.name, choiceText:choice.text, effects:choice.effects});
+
+  // show popup
+  showResultPopup(choice, prevStats);
+}
+
+function showResultPopup(choice, prevStats){
+  const popup = document.getElementById('result-popup');
+  document.getElementById('rp-choice').textContent = `"${choice.text}"`;
+  document.getElementById('rp-response').textContent = choice.response;
+
+  const effsEl = document.getElementById('rp-effects');
+  const allEffs = [];
+  Object.keys(choice.effects).forEach(k=>{
+    const delta = choice.effects[k];
+    if(delta===0) return;
+    const name = {physical:'신체',sexual:'성(性)발달',social:'사회·정서',career:'진로'}[k];
+    allEffs.push(`<span class="r-eff ${delta>0?'pos':'neg'}">${delta>0?'▲':'▼'} ${name} ${Math.abs(delta)}</span>`);
+  });
+  effsEl.innerHTML = allEffs.join('');
+
+  popup.classList.add('show');
+
+  const btn = document.getElementById('rp-next-btn');
+  btn.textContent = state.sceneIndex < SCENES.length-1 ? '다음 장면 →' : '결과 보기 →';
+  btn.onclick = () => {
+    popup.classList.remove('show');
+    state.sceneIndex++;
+    if(state.sceneIndex >= SCENES.length){
+      setTimeout(showEnding, 300);
+    } else {
+      setTimeout(renderScene, 200);
+    }
+  };
+}
+
+// ═══════════════════════════════════════════════
+// ENDING
+// ═══════════════════════════════════════════════
+function showEnding(){
+  goTo('ending');
+  buildEnding();
+}
+
+function getTopStats(){
+  const s = state.stats;
+  return Object.entries(s).sort((a,b)=>b[1]-a[1]);
+}
+
+function buildEnding(){
+  const sorted = getTopStats();
+  const top1 = sorted[0][0], top2 = sorted[1][0];
+  const low1 = sorted[3][0], low2 = sorted[2][0];
+
+  // find ending type
+  let ending = ENDINGS[0];
+  for(const e of ENDINGS){
+    if(e.minStats.includes(top1) && e.minStats.includes(top2)){
+      ending = e; break;
+    }
+  }
+  if(!ending) ending = ENDINGS[Math.floor(Math.random()*ENDINGS.length)];
+
+  const statNames = {physical:'신체발달',sexual:'성(性)발달',social:'사회·정서',career:'진로발달'};
+  const statColors = {physical:'var(--stat1)',sexual:'var(--stat2)',social:'var(--stat3)',career:'var(--stat4)'};
+
+  // header
+  document.getElementById('e-emoji').textContent = ending.emoji;
+  document.getElementById('e-title').innerHTML = ending.title.replace(/([\s\S]*)(.)$/, (m,a,b)=>`${a}<span>${b}</span>`) || `<span>${ending.title}</span>`;
+  document.getElementById('e-title').textContent = ending.title;
+  document.getElementById('e-subtitle').textContent = `${state.character ? state.character.tag : ''} ${state.nickname} · ${ending.subtitle}`;
+  document.getElementById('e-future-name').textContent = state.nickname;
+
+  // stat graph
+  const graphEl = document.getElementById('e-stat-graph');
+  graphEl.innerHTML = sorted.map(([k,v])=>`
+    <div class="sg-row">
+      <div class="sg-name">${statNames[k]}</div>
+      <div class="sg-bar-bg"><div class="sg-bar-fill" style="width:${v}%;background:${statColors[k]}"></div></div>
+      <div class="sg-val" style="color:${statColors[k]}">${v}</div>
+    </div>`).join('');
+
+  // analysis
+  const tags = getTopTags();
+  const topName1 = statNames[top1], topName2 = statNames[top2];
+  document.getElementById('e-analysis').innerHTML = `
+    <span class="hi">${state.nickname}</span>의 오늘 하루에서 가장 빛났던 건 
+    <span class="hi">${topName1}</span>과 <span class="hi2">${topName2}</span>이야.<br><br>
+    ${ending.analysis}`;
+  
+  const tagsEl = document.getElementById('e-tags');
+  tagsEl.innerHTML = tags.length ? tags.map(t=>`<span class="tag-item">#${t}</span>`).join('') : '<span class="tag-item">#균형형</span>';
+
+  // tips for low stats
+  const tipsEl = document.getElementById('e-tips');
+  const lowStats = [low1, low2];
+  tipsEl.innerHTML = lowStats.map(k=>{
+    const tip = TIPS[k];
+    return `<div class="tip-item">
+      <span class="tip-icon">${tip.icon}</span>
+      <div class="tip-content">
+        <div class="tip-stat-name">${tip.name} 관리 팁</div>
+        <div class="tip-text">${tip.tip}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // future letter - based on lowest stat
+  const letterKey = low1;
+  document.getElementById('e-letter').innerHTML = 
+    `"${FUTURE_LETTERS[letterKey]}<br><br>지금 이 순간의 ${state.nickname}을 응원해."`;
+}
+
+// ═══════════════════════════════════════════════
+// SAVE RESULT
+// ═══════════════════════════════════════════════
+function saveResult(){
+  showToast('📸 결과 이미지를 준비 중이에요...');
+  
+  const sorted = getTopStats();
+  const top1 = sorted[0][0], top2 = sorted[1][0];
+  const tags = getTopTags();
+  const statNames = {physical:'신체발달',sexual:'성(性)발달',social:'사회·정서',career:'진로발달'};
+  const statColors = {physical:'#4de89a',sexual:'#ff6b9d',social:'#5ea8ff',career:'#ffc95e'};
+  
+  let ending = ENDINGS[0];
+  for(const e of ENDINGS){
+    if(e.minStats.includes(top1) && e.minStats.includes(top2)){ ending = e; break; }
+  }
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 720;
+  canvas.height = 1000;
+  const ctx = canvas.getContext('2d');
+
+  // BG
+  ctx.fillStyle = '#0a0c14';
+  ctx.fillRect(0,0,720,1000);
+
+  // Grid
+  ctx.strokeStyle = 'rgba(124,111,255,0.05)';
+  ctx.lineWidth = 1;
+  for(let x=0;x<720;x+=40){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,1000); ctx.stroke(); }
+  for(let y=0;y<1000;y+=40){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(720,y); ctx.stroke(); }
+
+  // Top accent line
+  const grad = ctx.createLinearGradient(0,0,720,0);
+  grad.addColorStop(0,'#7c6fff'); grad.addColorStop(1,'#3dd9c0');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0,0,720,3);
+
+  // Badge
+  ctx.fillStyle = 'rgba(124,111,255,0.12)';
+  roundRect(ctx, 40, 40, 200, 28, 14);
+  ctx.fill();
+  ctx.fillStyle = '#7c6fff';
+  ctx.font = 'bold 11px monospace';
+  ctx.letterSpacing = '3px';
+  ctx.fillText('THE BALANCE · 나의 발달 로그', 56, 58);
+
+  // Emoji
+  ctx.font = '72px serif';
+  ctx.fillText(ending.emoji, 40, 170);
+
+  // Title
+  ctx.fillStyle = '#e8eaf0';
+  ctx.font = 'bold 36px "Noto Sans KR", sans-serif';
+  ctx.fillText(ending.title, 40, 220);
+
+  // Subtitle
+  ctx.fillStyle = '#8b90a8';
+  ctx.font = '16px "Noto Sans KR", sans-serif';
+  ctx.fillText(`${state.character?state.character.tag:''} ${state.nickname}`, 40, 252);
+
+  // Divider
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(40,276); ctx.lineTo(680,276); ctx.stroke();
+
+  // Stat label
+  ctx.fillStyle = '#5a6080';
+  ctx.font = '11px monospace';
+  ctx.fillText('STAT ANALYSIS', 40, 308);
+
+  // Stats
+  sorted.forEach(([k,v],i)=>{
+    const y = 330 + i*52;
+    ctx.fillStyle = '#8b90a8';
+    ctx.font = '13px "Noto Sans KR", sans-serif';
+    ctx.fillText(statNames[k], 40, y+4);
+    
+    // bar bg
+    ctx.fillStyle = 'rgba(255,255,255,0.05)';
+    roundRect(ctx, 180, y-14, 440, 10, 5);
+    ctx.fill();
+    
+    // bar fill
+    const fg = ctx.createLinearGradient(180,y-14, 180+440*v/100, y);
+    fg.addColorStop(0, statColors[k]);
+    fg.addColorStop(1, statColors[k]+'88');
+    ctx.fillStyle = fg;
+    roundRect(ctx, 180, y-14, 440*v/100, 10, 5);
+    ctx.fill();
+    
+    ctx.fillStyle = statColors[k];
+    ctx.font = 'bold 13px monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText(v, 680, y+4);
+    ctx.textAlign = 'left';
+  });
+
+  // Divider
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+  ctx.beginPath(); ctx.moveTo(40, 560); ctx.lineTo(680,560); ctx.stroke();
+
+  // Analysis label
+  ctx.fillStyle = '#5a6080';
+  ctx.font = '11px monospace';
+  ctx.fillText('GROWTH ANALYSIS', 40, 590);
+  
+  ctx.fillStyle = '#8b90a8';
+  ctx.font = '14px "Noto Sans KR", sans-serif';
+  const analysisParts = ending.analysis.match(/.{1,38}/g)||[];
+  analysisParts.slice(0,4).forEach((line,i)=>{ ctx.fillText(line, 40, 612+i*22); });
+
+  // Tags
+  let tx = 40;
+  tags.forEach(tag=>{
+    ctx.fillStyle = 'rgba(124,111,255,0.15)';
+    const w = ctx.measureText('#'+tag).width + 20;
+    roundRect(ctx, tx, 710, w, 26, 13);
+    ctx.fill();
+    ctx.fillStyle = '#9d8fff';
+    ctx.font = '12px "Noto Sans KR", sans-serif';
+    ctx.fillText('#'+tag, tx+10, 727);
+    tx += w + 8;
+  });
+
+  // Footer
+  ctx.fillStyle = 'rgba(255,255,255,0.06)';
+  ctx.fillRect(0, 960, 720, 40);
+  ctx.fillStyle = '#5a6080';
+  ctx.font = '11px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('《THE BALANCE》나의 발달 로그 · 초등 5학년 성장 시뮬레이션', 360, 984);
+  ctx.textAlign = 'left';
+
+  // Download
+  const link = document.createElement('a');
+  link.download = `THE_BALANCE_${state.nickname}_결과.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  showToast('✅ 이미지가 저장됐어!');
+}
+
+function roundRect(ctx, x, y, w, h, r){
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);
+  ctx.lineTo(x+w-r, y);
+  ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w, y+h-r);
+  ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r, y+h);
+  ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r);
+  ctx.quadraticCurveTo(x,y,x+r,y);
+  ctx.closePath();
+}
+
+// ═══════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2500);
+}
+
+function restartGame(){
+  // 삽입됐던 성(性)발달 장면 제거
+  const mId = SEXUAL_DEV_SCENES['남'].id;
+  const fId = SEXUAL_DEV_SCENES['여'].id;
+  const idx = SCENES.findIndex(s => s.id === mId || s.id === fId);
+  if(idx !== -1) SCENES.splice(idx, 1);
+
+  state = {
+    nickname: '',
+    character: null,
+    stats: { physical:50, sexual:50, social:50, career:50 },
+    sceneIndex: 0,
+    tags: {},
+    choicesMade: [],
+  };
+  selectedWake = null;
+  document.getElementById('nickname-input').value = '';
+  updateNicknamePreview();
+  goTo('title');
+}
+
+// Init stat bars
+updateStatBars();
+</script>
+</body>
+</html>
