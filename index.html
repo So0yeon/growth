@@ -950,7 +950,7 @@ const WAKE_OPTIONS = [
 const SCENES = [
   {
     id:'school-go', name:'등교', time:'08:10 AM', emoji:'🚶',
-    situation:'{name}아, 오늘 학교 가는 길에 친한 친구 {name}이가 문자를 보냈어. "나 오늘 기분 별로야, 나랑 얘기해줄 수 있어?"',
+    situation:'{name}아, 오늘 학교 가는 길에 친한 친구이가 문자를 보냈어. "나 오늘 기분 별로야, 나랑 얘기해줄 수 있어?"',
     dialogue:'"나 요즘 좀 힘들어. 걔가 나한테 왜 그런 거야?"',
     choices:[
       { text:'걸으면서 전화해서 들어준다', effects:{physical:-3, social:+10, career:-2}, pos:['사회 ↑10'], neg:['신체 ↓3','진로 ↓2'], tags:['감정숨김형'], response:'친구 목소리를 들으니 마음이 한결 따뜻해졌어. 그런데 걷다가 발을 삐끗했어...' },
@@ -960,7 +960,7 @@ const SCENES = [
   },
   {
     id:'class', name:'수업시간', time:'09:00 AM', emoji:'📖',
-    situation:'수학 시간에 선생님이 어려운 문제를 칠판에 적었어. {name}이는 풀 것 같은데, 손 들어야 할지 말아야 할지 고민돼.',
+    situation:'수학 시간에 선생님이 어려운 문제를 칠판에 적으셨어. {name}이는 풀 것 같은데, 손 들어야 할지 말아야 할지 고민돼.',
     dialogue:'"이거 풀 수 있는 사람?" 선생님이 두리번거렸어.',
     choices:[
       { text:'자신 없지만 손을 든다', effects:{physical:-2, sexual:+5, social:+5, career:+8}, pos:['진로 ↑8','사회 ↑5'], neg:['신체 ↓2'], tags:['도전형'], response:'틀렸지만 "좋은 시도야"라는 칭찬을 받았어. 다음엔 더 잘할 수 있을 것 같았어.' },
@@ -970,12 +970,12 @@ const SCENES = [
   },
   {
     id:'break', name:'쉬는시간', time:'10:30 AM', emoji:'💤',
-    situation:'10분 쉬는 시간이야. 어제 잠이 좀 부족해서 졸려. 근데 친구들이 운동장 나가자고 해.',
+    situation:'10분 쉬는 시간이야. 어제 잠이 좀 부족해서 졸려. 근데 친구들이 보드게임 하자고 해.',
     dialogue:'"야 {name}아, 같이 달리기 하러 가자! 안 가면 섭섭해!"',
     choices:[
-      { text:'운동장 가서 같이 뛴다', effects:{physical:+5, sexual:-3, social:+7, career:-2}, pos:['신체 ↑5','사회 ↑7'], neg:['성적 ↓3'], tags:['도전형'], response:'달리다 보니 졸음이 싹 날아갔어! 근데 다음 수업 집중하기 살짝 힘들었어.' },
-      { text:'엎드려서 짧게 눈을 붙인다', effects:{physical:+7, sexual:+3, social:-5, career:+2}, pos:['신체 ↑7','진로 ↑2'], neg:['사회 ↓5'], tags:['야행성','미루기형'], response:'10분 잠이 꿀이었어. 다음 수업은 개운했는데, 친구들이 좀 삐진 것 같아.' },
-      { text:'교실에 남아 혼자 그림 그리며 쉰다', effects:{physical:+3, sexual:+7, social:-2, career:+5}, pos:['성적 ↑7','진로 ↑5'], neg:['사회 ↓2'], tags:['혼자형'], response:'혼자만의 시간이 생각보다 좋았어. 뭔가 나만의 세계를 찾은 기분.' },
+      { text:'보드게임은 못참지! 같이 하자', effects:{physical:+5, social:+7, career:-2}, pos:['신체 ↑5','사회 ↑7'], neg:['성적 ↓3'], tags:['도전형'], response:'달리다 보니 졸음이 싹 날아갔어! 근데 다음 수업 집중하기 살짝 힘들었어.' },
+      { text:'엎드려서 짧게 눈을 붙인다', effects:{physical:+4, social:-5, career:+2}, pos:['신체 ↑4','진로 ↑2'], neg:['사회 ↓5'], tags:['야행성','미루기형'], response:'10분 잠이 꿀이었어. 다음 수업은 개운했는데, 친구들이 좀 삐진 것 같아.' },
+      { text:'교실에 남아 혼자 그림 그리며 쉰다', effects:{physical:-3, social:-2, career:+5}, pos:['진로 ↑5'], neg:['사회 ↓2'], tags:['혼자형'], response:'혼자만의 시간이 생각보다 좋았어. 뭔가 나만의 세계를 찾은 기분.' },
     ]
   },
   {
@@ -983,9 +983,9 @@ const SCENES = [
     situation:'급식실에서 줄 서는데 친하지 않은 애가 새치기를 했어. 뒤에 있던 친구가 {name}이를 보며 눈짓해.',
     dialogue:'"야, 그냥 냅둬?" vs "네가 말해봐" 눈빛 싸움 중...',
     choices:[
-      { text:'"야, 줄 서야지" 하고 직접 말한다', effects:{physical:-2, sexual:+3, social:+8, career:+5}, pos:['사회 ↑8','진로 ↑5'], neg:['신체 ↓2'], tags:['도전형'], response:'심장은 쿵쾅댔지만 말했어. 상대가 당황해서 뒤로 갔어. 뒤 친구가 엄지를 들어줬어.' },
-      { text:'그냥 모른 척하고 참는다', effects:{physical:+3, sexual:-5, social:-3, career:-2}, pos:['신체 ↑3'], neg:['성적 ↓5','사회 ↓3'], tags:['감정숨김형','눈치형'], response:'스트레스를 꾹 참았어. 밥 먹는 내내 기분이 별로였어. 그리고 나 자신이 좀 답답했어.' },
-      { text:'선생님께 조용히 알린다', effects:{physical:+2, sexual:+5, social:+3, career:+3}, pos:['성적 ↑5','사회 ↑3'], neg:[], tags:['눈치형'], response:'선생님이 정리해줬어. 직접 말하는 것보다는 덜 떨렸는데, 스스로 해결한 느낌은 덜했어.' },
+      { text:'"야, 줄 서야지" 하고 직접 말한다', effects:{social:+8}, pos:['사회 ↑8'], neg:[], tags:['도전형'], response:'심장은 쿵쾅댔지만 말했어. 상대가 당황해서 뒤로 갔어. 뒤 친구가 엄지를 들어줬어.' },
+      { text:'그냥 모른 척하고 참는다', effects:{social:-3}, pos:[], neg:['사회 ↓3'], tags:['회피형'], response:'스트레스를 꾹 참았어. 밥 먹는 내내 기분이 별로였어. 그리고 나 자신이 좀 답답했어.' },
+      { text:'선생님께 조용히 알린다', effects:{social:+3}, pos:['사회 ↑3'], neg:[], tags:['눈치형'], response:'선생님이 정리해주셨어. 직접 말하는 것보다는 덜 떨렸는데, 스스로 해결한 느낌은 덜했어.' },
     ]
   },
   {
@@ -993,9 +993,9 @@ const SCENES = [
     situation:'점심 먹고 자유 시간이야. 친구들이 축구하자는데, 숙제를 지금 해두면 저녁이 편해.',
     dialogue:'"야 {name}아, 안 나오면 팀 구성 안 되잖아!"',
     choices:[
-      { text:'숙제 먼저 해두고 나간다', effects:{physical:-3, sexual:+0, social:-3, career:+8}, pos:['진로 ↑8'], neg:['신체 ↓3','사회 ↓3'], tags:['완벽주의'], response:'숙제를 다 끝냈어. 뿌듯한데 친구들이 이미 다 들어가버렸어...' },
-      { text:'축구 먼저 실컷 한다', effects:{physical:+8, sexual:-3, social:+8, career:-5}, pos:['신체 ↑8','사회 ↑8'], neg:['진로 ↓5'], tags:['미루기형'], response:'최고의 점심시간이었어! 근데 저녁에 숙제가 기다리고 있어...' },
-      { text:'30분만 뛰고 돌아온다', effects:{physical:+5, sexual:+0, social:+4, career:+3}, pos:['신체 ↑5','사회 ↑4','진로 ↑3'], neg:[], tags:[], response:'시간을 잘 나눴어. 친구들도 만족하고 나도 여유 있는 오후였어.' },
+      { text:'숙제 먼저 해두고 나간다', effects:{physical:-5, social:-3, career:+8}, pos:['진로 ↑8'], neg:['신체 ↓3','사회 ↓3'], tags:['완벽주의'], response:'숙제를 다 끝냈어. 뿌듯한데 친구들이 이미 다 들어가버렸어...' },
+      { text:'축구 먼저 실컷 한다', effects:{physical:+9, social:+8, career:-6}, pos:['신체 ↑8','사회 ↑8'], neg:['진로 ↓5'], tags:['미루기형'], response:'최고의 점심시간이었어! 근데 저녁에 숙제가 기다리고 있어...' },
+      { text:'10분만 뛰고 돌아온다', effects:{physical:+5, social:+4, career:+3}, pos:['신체 ↑5','사회 ↑4','진로 ↑3'], neg:[], tags:[], response:'시간을 잘 나눴어. 축구와 숙제 두 마리 토끼를 잡은 점심시간이었어.' },
     ]
   },
   {
@@ -1003,9 +1003,9 @@ const SCENES = [
     situation:'사회 시간에 모둠 발표야. 근데 우리 팀에서 {name}이가 제일 잘 알고 있어. 발표를 맡을지 말지 고민.',
     dialogue:'"우리 누가 발표할 건지 정하자. 다들 하기 싫어하는 눈치야."',
     choices:[
-      { text:'내가 대표로 발표하겠다고 한다', effects:{physical:-2, sexual:+3, social:+8, career:+10}, pos:['진로 ↑10','사회 ↑8'], neg:['신체 ↓2'], tags:['도전형'], response:'엄청 떨렸지만 해냈어! 선생님이 "발표 잘했어" 하고 칭찬해줬어. 자신감이 올라가는 느낌이었어.' },
-      { text:'같이 나눠서 각자 한 파트씩 한다', effects:{physical:+0, sexual:+3, social:+5, career:+5}, pos:['사회 ↑5','진로 ↑5','성적 ↑3'], neg:[], tags:[], response:'협력해서 완성했어. 혼자 다 하는 것보다 팀이 함께하는 게 더 좋을 수도 있어.' },
-      { text:'다른 친구가 발표하고 나는 자료 정리를 맡는다', effects:{physical:+3, sexual:-3, social:+2, career:+3}, pos:['신체 ↑3','사회 ↑2'], neg:['성적 ↓3'], tags:['감정숨김형'], response:'발표는 피했어. 근데 선생님이 "넌 왜 안 했어?" 하고 물어봐서 살짝 당황했어.' },
+      { text:'내가 대표로 발표하겠다고 한다', effects:{social:+8, career:+10}, pos:['진로 ↑10','사회 ↑8'], neg:[], tags:['도전형'], response:'엄청 떨렸지만 해냈어! 선생님이 "발표 잘했어" 하고 칭찬해줬어. 자신감이 올라가는 느낌이었어.' },
+      { text:'같이 나눠서 각자 한 파트씩 한다', effects:{social:-2, career:+5}, pos:['진로 ↑5'], neg:['사회 ↓2'], tags:[], response:'협력해서 완성했어. 혼자 다 하는 것보다 팀이 함께하는 게 더 좋을 수도 있어.' },
+      { text:'다른 친구가 발표하고 나는 자료 정리를 맡는다', effects:{social:-5, career:+3}, pos:['진로 ↑3'], neg:['사회 ↓3'], tags:['감정숨김형'], response:'발표는 피했어. 근데 선생님이 "넌 왜 안 했어?" 하고 물어봐서 살짝 당황했어.' },
     ]
   },
   {
