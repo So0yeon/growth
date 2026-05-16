@@ -192,6 +192,7 @@ body::before {
   cursor: pointer;
   letter-spacing: 1px;
   box-shadow: 0 8px 32px rgba(124,111,255,0.35);
+  margin: 20px auto 0;
   transition: all 0.2s;
   position: relative; overflow: hidden;
 }
@@ -223,7 +224,7 @@ body::before {
   gap: 0;
 }
 .screen-header {
-  width: 100%;
+  width: fit-content%;
   margin-bottom: 36px;
 }
 .step-label {
@@ -950,7 +951,7 @@ const WAKE_OPTIONS = [
 const SCENES = [
   {
     id:'school-go', name:'등교', time:'08:10 AM', emoji:'🚶',
-    situation:'{name}아, 오늘 학교 가는 길에 친한 친구이가 문자를 보냈어. "나 오늘 기분 별로야, 나랑 얘기해줄 수 있어?"',
+    situation:'{name}아, 오늘 학교 가는 길에 절친이 문자를 보냈어. "나 오늘 기분 별로야, 나랑 얘기해줄 수 있어?"',
     dialogue:'"나 요즘 좀 힘들어. 걔가 나한테 왜 그런 거야?"',
     choices:[
       { text:'걸으면서 전화해서 들어준다', effects:{physical:-3, social:+10, career:-2}, pos:['사회 ↑10'], neg:['신체 ↓3','진로 ↓2'], tags:['감정숨김형'], response:'친구 목소리를 들으니 마음이 한결 따뜻해졌어. 그런데 걷다가 발을 삐끗했어...' },
